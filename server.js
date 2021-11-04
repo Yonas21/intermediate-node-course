@@ -8,25 +8,37 @@ const app = express();
 
 app.use(express.json());
 
-app.listen(port, () => {
-  console.log(`server is listening on port:${port}`);
-});
-
-mongoose.connect("mongodb://localhost/userData");
+mongoose
+  .connect("mongodb://localhost/userData")
+  .then((message) => console.log("connected successfully"))
+  .catch((err) => console.log("unable to connect to db", err));
 
 // CREATE
 app.post("/users", (req, res) => {
   // User.create()
   const { name, email, password } = req.body;
-  const user = new User({ name, email, password });
-  user
-    .save()
-    .then((result) => {
-      return res.status(201).json(result);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
+  User.create(
+    {
+      name,
+      email,
+      password,
+    },
+    (err, data) => {
+      if (err) {
+        res.status(500).json({
+          success: false,
+          message: err,
+        });
+      } else if (!data) {
+        res.status(404).json({ success: false, message: "Not Found" });
+      } else {
+        res.status(201).json({
+          success: true,
+          data,
+        });
+      }
+    }
+  );
 });
 
 app
@@ -34,6 +46,20 @@ app
   // READ
   .get((req, res) => {
     // User.findById()
+    let id = req.params.id;
+    User.findById(id)
+      .then((result) => {
+        res.status(200).json({
+          result,
+          message: "success",
+        });
+      })
+      .catch((err) => {
+        res.status(404).json({
+          message: `unable to find data with id ${id} `,
+          err,
+        });
+      });
   })
   // UPDATE
   .put((req, res) => {
@@ -43,3 +69,7 @@ app
   .delete((req, res) => {
     // User.findByIdAndDelete()
   });
+
+app.listen(port, () => {
+  console.log(`server is listening on port:${port}`);
+});
