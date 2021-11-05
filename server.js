@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const User = require("./models/User");
+const sendResponse = require("./config/response");
 
 const port = 8000;
 const app = express();
@@ -36,19 +37,7 @@ app.post("/users", (req, res) => {
       password,
     },
     (err, data) => {
-      if (err) {
-        res.status(500).json({
-          success: false,
-          message: err,
-        });
-      } else if (!data) {
-        res.status(404).json({ success: false, message: "Not Found" });
-      } else {
-        res.status(201).json({
-          success: true,
-          data,
-        });
-      }
+      sendResponse(res, err, data);
     }
   );
 });
