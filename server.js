@@ -13,6 +13,16 @@ mongoose
   .then((message) => console.log("connected successfully"))
   .catch((err) => console.log("unable to connect to db", err));
 
+app.get("/users", (req, res) => {
+  User.find({}, { _id: 1, __v: 0 })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+});
+
 // CREATE
 app.post("/users", (req, res) => {
   // User.create()
@@ -64,6 +74,21 @@ app
   // UPDATE
   .put((req, res) => {
     // User.findByIdAndUpdate()
+    let id = req.params.id;
+    const { name, email, password } = req.body.newData;
+    User.findByIdAndUpdate(id, { name, email, password }, { new: true })
+      .then((result) => {
+        res.status(200).json({
+          message: "user successfully updated",
+          result,
+        });
+      })
+      .catch((err) => {
+        res.status(404).json({
+          message: `unable to update user with id ${id}`,
+          err,
+        });
+      });
   })
   // DELETE
   .delete((req, res) => {
