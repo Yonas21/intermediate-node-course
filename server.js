@@ -13,6 +13,8 @@ mongoose
   .then((message) => console.log("connected successfully"))
   .catch((err) => console.log("unable to connect to db", err));
 
+// GET ALL USERS
+
 app.get("/users", (req, res) => {
   User.find({}, { _id: 1, __v: 0 })
     .then((result) => {
@@ -93,6 +95,17 @@ app
   // DELETE
   .delete((req, res) => {
     // User.findByIdAndDelete()
+    let id = req.params.id;
+    User.findByIdAndDelete(id)
+      .then((result) => {
+        res.status(200).json({
+          message: `user with id ${id}`,
+          result,
+        });
+      })
+      .catch((err) => {
+        res.status(404).json({ message: `unable to delete user`, err });
+      });
   });
 
 app.listen(port, () => {
