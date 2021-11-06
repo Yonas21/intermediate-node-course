@@ -48,19 +48,9 @@ app
   .get((req, res) => {
     // User.findById()
     let id = req.params.id;
-    User.findById(id)
-      .then((result) => {
-        res.status(200).json({
-          result,
-          message: "success",
-        });
-      })
-      .catch((err) => {
-        res.status(404).json({
-          message: `unable to find data with id ${id} `,
-          err,
-        });
-      });
+    User.findById(id, (err, data) => {
+    sendResponse(res, err, data)
+    })
   })
   // UPDATE
   .put((req, res) => {
