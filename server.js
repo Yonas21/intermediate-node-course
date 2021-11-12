@@ -49,8 +49,8 @@ app
     // User.findById()
     let id = req.params.id;
     User.findById(id, (err, data) => {
-    sendResponse(res, err, data)
-    })
+      sendResponse(res, err, data);
+    });
   })
   // UPDATE
   .put((req, res) => {
@@ -75,16 +75,9 @@ app
   .delete((req, res) => {
     // User.findByIdAndDelete()
     let id = req.params.id;
-    User.findByIdAndDelete(id)
-      .then((result) => {
-        res.status(200).json({
-          message: `user with id ${id}`,
-          result,
-        });
-      })
-      .catch((err) => {
-        res.status(404).json({ message: `unable to delete user`, err });
-      });
+    User.findByIdAndDelete(id, (err, data) => {
+      sendResponse(res, err, data);
+    });
   });
 
 app.listen(port, () => {
