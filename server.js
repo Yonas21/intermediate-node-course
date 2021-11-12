@@ -17,13 +17,9 @@ mongoose
 // GET ALL USERS
 
 app.get("/users", (req, res) => {
-  User.find({}, { _id: 1, __v: 0 })
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
+  User.find({}, { _id: 1, __v: 0 }, (err, data) => {
+    sendResponse(res, err, data);
+  });
 });
 
 // CREATE
