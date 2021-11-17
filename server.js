@@ -11,7 +11,7 @@ app.use(express.json());
 
 mongoose
   .connect("mongodb://localhost/userData")
-  .then((message) => console.log("connected successfully", message))
+  .then((message) => console.log("connected successfully"))
   .catch((err) => console.log("unable to connect to db", err));
 
 // GET ALL USERS
